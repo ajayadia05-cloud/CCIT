@@ -2981,3 +2981,527 @@ kbd {
   color: var(--accent-primary);
   background: var(--accent-primary-glow);
 }
+
+
+/* ==========================================================================
+   CCIT ARENA STUDIO — CUSTOM UI/UX ENHANCEMENTS
+   (Sidebar Accordion Sub-Menus, Jembatan Keledai, Flashcards, Tokoh TI,
+    Audio Narrator Bar, Pre-Quiz Memory Review & Admin User Controls)
+   ========================================================================== */
+
+/* Quick Login Role Selector on Login Screen */
+.login-quick-access {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+}
+
+.login-quick-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.quick-role-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.quick-role-btn:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-surface-hover);
+  transform: translateY(-1px);
+}
+
+.quick-role-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  background: var(--accent-primary-glow);
+  flex-shrink: 0;
+}
+
+.quick-role-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.quick-role-meta strong {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.quick-role-meta small {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+/* Nested Sub-Menu inside Sidebar Accordion */
+.subtopic-nested-menu {
+  margin: 4px 0 8px 18px;
+  padding-left: 10px;
+  border-left: 2px solid var(--border-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.subtopic-nested-menu.collapsed {
+  display: none;
+}
+
+.nested-sec-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.16s ease;
+  font-family: inherit;
+}
+
+.nested-sec-btn:hover {
+  background: var(--bg-surface-hover);
+  color: var(--accent-primary);
+}
+
+.nested-sec-btn.active {
+  background: var(--accent-primary-glow);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.nested-sec-btn.quiz-shortcut {
+  margin-top: 2px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--status-correct);
+  font-weight: 600;
+}
+
+.nested-sec-btn.quiz-shortcut:hover {
+  background: rgba(16, 185, 129, 0.18);
+}
+
+/* Audio Narrator & Quick Section Bar inside Materi View */
+.materi-Sticky-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.section-jump-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sec-jump-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.sec-jump-pill:hover,
+.sec-jump-pill.active {
+  background: var(--accent-gradient);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.narrator-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-narrator {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  border-radius: 8px;
+  border: 1px solid var(--accent-primary);
+  background: var(--accent-primary-glow);
+  color: var(--accent-primary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.btn-narrator:hover,
+.btn-narrator.speaking {
+  background: var(--accent-primary);
+  color: #090d16;
+}
+
+/* Jembatan Keledai (Mnemonic & Easy Memory Booster Card) */
+.mnemonic-booster-card {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(99, 102, 241, 0.14) 100%);
+  border: 1.5px solid rgba(56, 189, 248, 0.4);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mnemonic-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mnemonic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mnemonic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.mnemonic-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.mnemonic-acronym {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent-primary);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.mnemonic-meaning {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Interactive Flip/Highlight Flashcards for CCIT Quick Memorization */
+.flashcard-deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.ccit-flashcard {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 128px;
+}
+
+.ccit-flashcard:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.ccit-flashcard.flipped {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: var(--status-correct);
+}
+
+.flashcard-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-primary);
+  margin-bottom: 6px;
+}
+
+.ccit-flashcard.flipped .flashcard-tag {
+  color: var(--status-correct);
+}
+
+.flashcard-q {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+.flashcard-a {
+  display: none;
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border-strong);
+}
+
+.ccit-flashcard.flipped .flashcard-a {
+  display: block;
+}
+
+.flashcard-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Tokoh Penting TI Profile Cards */
+.tokoh-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.tokoh-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.tokoh-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+}
+
+.tokoh-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tokoh-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--accent-gradient);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.tokoh-title-wrap h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.tokoh-role-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-primary-glow);
+  color: var(--accent-primary);
+}
+
+.tokoh-Contribution-list {
+  padding-left: 16px;
+  font-size: 12.8px;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.tokoh-key-quote {
+  margin-top: auto;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg-surface);
+  border-left: 3px solid var(--accent-primary);
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+/* Visual Historical Timeline */
+.ccit-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+  position: relative;
+  padding-left: 18px;
+  border-left: 3px solid var(--accent-primary);
+}
+
+.ccit-timeline-item {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 12px 16px;
+  position: relative;
+}
+
+.ccit-timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -25px;
+  top: 16px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  border: 2px solid var(--bg-app);
+}
+
+.timeline-era-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-bottom: 3px;
+}
+
+/* Pre-Quiz Study & Memory Review Accordion inside Quiz View */
+.prequiz-review-banner {
+  background: var(--bg-surface);
+  border: 1.5px solid rgba(56, 189, 248, 0.38);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.prequiz-review-header {
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.14) 0%, rgba(99, 102, 241, 0.1) 100%);
+  border: none;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.prequiz-review-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.prequiz-review-body {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.prequiz-review-body.collapsed {
+  display: none;
+}
+
+.prequiz-points-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.prequiz-point-box {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.prequiz-point-box strong {
+  color: var(--accent-primary);
+  display: block;
+  margin-bottom: 3px;
+}

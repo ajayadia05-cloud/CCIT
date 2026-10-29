@@ -1,29 +1,33 @@
 /* ==========================================================================
-   EduLogic Java Studio — Interactive Web Audio Synthesizer & Soundscape Engine
+   CCIT Arena Studio — Interactive Web Audio Synthesizer, Button SFX Packs
+   & Voice Narration Media Engine
    File: audio.js
    Features:
-   - 4 Varied Procedural Background Music (BGM) Themes + Auto-Adaptive Mode:
-     1. "lofi"       : Warm Lo-Fi Electric Piano Chord Progression + Soft Pulse
-     2. "cyber"      : Futuristic Algorithm Arpeggio & Pad
-     3. "zen"        : Calm Pentatonic Bell Chimes & Warm Harmonic Drone
-     4. "quiz_pulse" : Energetic Marimba/Pluck Study Rhythm for Quiz Mode
-   - Complete Tactile UI & Learning Sound Effects (SFX):
-     - Button Click, Soft Hover Tick, Navigation Whoosh/Chime
-     - Quiz Option Selection (Pitch-scaled A..E), Answer Correct Fanfare, Answer Wrong
-     - Code Simulator Step & Reset, Copy Code, Modal Open/Close, Login/Logout
+   - 5 Varied Procedural Background Music (BGM) Themes + Auto-Adaptive Mode:
+     1. "lofi"          : Warm Lo-Fi Cyber Study (Electric Piano Chords + Pulse)
+     2. "arena_ccit"    : Upbeat Cerdas Cermat Competition Rhythm
+     3. "retro_eniac"   : Retro ENIAC & ARPANET Synthwave Arpeggio
+     4. "zen_library"   : Calm Pentatonic Bell Chimes & Warm Harmonic Drone
+     5. "cloud_ambient" : Futuristic Cloud & AI Horizon Pad
+   - 3 Selectable Button SFX Packs ("Variasi Audio Tombol Menarik"):
+     1. "arcade" : Crisp Game Show / Cerdas Cermat Chimes & Buzzer
+     2. "scifi"  : Futuristic Cyber Hologram UI Bleeps
+     3. "mech"   : Tactile Mechanical Keycap & Bubble Pop
+   - Voice Narrator (Audio Media Penjelasan Materi & Soal via Web Speech API)
    ========================================================================== */
 
 (function () {
   "use strict";
 
-  const AUDIO_SETTINGS_KEY = "edulogic_java_audio_settings_v1";
+  const AUDIO_SETTINGS_KEY = "ccit_arena_audio_settings_v1";
 
   const defaultSettings = {
     bgmEnabled: true,
-    bgmTheme: "auto", // "auto" | "lofi" | "cyber" | "zen" | "quiz_pulse"
+    bgmTheme: "auto", // "auto" | "lofi" | "arena_ccit" | "retro_eniac" | "zen_library" | "cloud_ambient"
     bgmVolume: 0.35,
     sfxEnabled: true,
-    sfxVolume: 0.65,
+    sfxPack: "arcade", // "arcade" | "scifi" | "mech"
+    sfxVolume: 0.70,
     hoverSfxEnabled: true
   };
 
@@ -55,8 +59,8 @@
   let currentAppMode = "materi"; // "materi" | "quiz" | "rekap" | "admin"
   let stepCounter = 0;
   let lastHoverTime = 0;
+  let isNarrating = false;
 
-  // Ensure AudioContext is initialized & resumed upon first user gesture
   function ensureAudioContext() {
     if (!ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -88,9 +92,6 @@
     sfxMasterGain.gain.setTargetAtTime(targetSfx, now, 0.04);
   }
 
-  /* ========================================================================
-     SYNTHESIS PRIMITIVES (NOTES, CHORDS, PERCUSSIVE TICKS)
-     ======================================================================== */
   function midiToFreq(midi) {
     return 440 * Math.pow(2, (midi - 69) / 12);
   }
@@ -99,7 +100,7 @@
     freq = 440,
     type = "sine",
     duration = 0.15,
-    attack = 0.01,
+    attack = 0.008,
     gain = 0.2,
     detune = 0,
     delay = 0,
@@ -180,65 +181,146 @@
   }
 
   /* ========================================================================
-     1. SOUND EFFECTS (SFX) LIBRARY
+     1. VARIED BUTTON & UI SOUND EFFECTS (3 DISTINCT SFX PACKS)
      ======================================================================== */
   const SFX = {
-    // Subtle hover micro-tick
     hover() {
       if (!settings.sfxEnabled || !settings.hoverSfxEnabled) return;
       const nowMs = performance.now();
-      if (nowMs - lastHoverTime < 45) return;
+      if (nowMs - lastHoverTime < 42) return;
       lastHoverTime = nowMs;
 
-      playTone({
-        freq: 980,
-        freqEnd: 1180,
-        type: "sine",
-        duration: 0.028,
-        attack: 0.003,
-        gain: 0.045,
-        targetBus: "sfx"
-      });
+      if (settings.sfxPack === "scifi") {
+        playTone({
+          freq: 1320,
+          freqEnd: 1680,
+          type: "sine",
+          duration: 0.025,
+          attack: 0.002,
+          gain: 0.045,
+          targetBus: "sfx"
+        });
+      } else if (settings.sfxPack === "mech") {
+        playSoftNoiseTick({
+          duration: 0.018,
+          gain: 0.05,
+          filterFreq: 2600,
+          targetBus: "sfx"
+        });
+      } else {
+        playTone({
+          freq: 980,
+          freqEnd: 1180,
+          type: "sine",
+          duration: 0.028,
+          attack: 0.003,
+          gain: 0.045,
+          targetBus: "sfx"
+        });
+      }
     },
 
-    // Standard tactile button press
     click() {
       if (!settings.sfxEnabled) return;
-      playTone({
-        freq: 520,
-        freqEnd: 760,
-        type: "triangle",
-        duration: 0.065,
-        attack: 0.004,
-        gain: 0.16,
-        targetBus: "sfx"
+      if (settings.sfxPack === "scifi") {
+        playTone({
+          freq: 780,
+          freqEnd: 1240,
+          type: "sine",
+          duration: 0.055,
+          attack: 0.003,
+          gain: 0.16,
+          targetBus: "sfx"
+        });
+        playTone({
+          freq: 1560,
+          type: "triangle",
+          duration: 0.04,
+          delay: 0.03,
+          gain: 0.1,
+          targetBus: "sfx"
+        });
+      } else if (settings.sfxPack === "mech") {
+        playTone({
+          freq: 320,
+          freqEnd: 180,
+          type: "triangle",
+          duration: 0.045,
+          attack: 0.002,
+          gain: 0.2,
+          targetBus: "sfx"
+        });
+        playSoftNoiseTick({
+          duration: 0.022,
+          gain: 0.08,
+          filterFreq: 3100,
+          targetBus: "sfx"
+        });
+      } else {
+        // Arcade Cerdas Cermat Crisp Click
+        playTone({
+          freq: 587.33,
+          freqEnd: 880,
+          type: "triangle",
+          duration: 0.065,
+          attack: 0.004,
+          gain: 0.17,
+          targetBus: "sfx"
+        });
+      }
+    },
+
+    accordion(isOpening = true) {
+      if (!settings.sfxEnabled) return;
+      const notes = isOpening ? [523.25, 659.25, 783.99] : [783.99, 659.25, 523.25];
+      notes.forEach((f, idx) => {
+        playTone({
+          freq: f,
+          type: "sine",
+          duration: 0.07,
+          attack: 0.005,
+          gain: 0.12,
+          delay: idx * 0.032,
+          targetBus: "sfx"
+        });
       });
     },
 
-    // Navigation between Sub-Bab / Tabs
     nav() {
       if (!settings.sfxEnabled) return;
       playTone({
         freq: 440,
         freqEnd: 587.33,
         type: "sine",
-        duration: 0.09,
-        attack: 0.008,
-        gain: 0.14,
+        duration: 0.085,
+        attack: 0.006,
+        gain: 0.15,
         targetBus: "sfx"
       });
       playTone({
         freq: 659.25,
         type: "triangle",
-        duration: 0.12,
-        attack: 0.01,
-        gain: 0.11,
-        delay: 0.045,
+        duration: 0.11,
+        attack: 0.008,
+        gain: 0.12,
+        delay: 0.04,
         targetBus: "sfx"
       });
     },
 
-    // Selecting quiz option A, B, C, D, E (ascending pitch per option!)
+    flipCard() {
+      if (!settings.sfxEnabled) return;
+      playTone({
+        freq: 659.25,
+        freqEnd: 987.77,
+        type: "sine",
+        duration: 0.09,
+        attack: 0.004,
+        gain: 0.16,
+        targetBus: "sfx"
+      });
+    },
+
     selectOption(optKey = "a") {
       if (!settings.sfxEnabled) return;
       const pitchMap = { a: 60, b: 62, c: 64, d: 67, e: 69 };
@@ -254,7 +336,7 @@
       });
     },
 
-    // Quiz Answer Correct Fanfare (C5 - E5 - G5 - C6)
+    // Cerdas Cermat Bell / Fanfare for Correct Answer
     correct() {
       if (!settings.sfxEnabled) return;
       const notes = [72, 76, 79, 84];
@@ -262,20 +344,20 @@
         playTone({
           freq: midiToFreq(midi),
           type: idx === notes.length - 1 ? "triangle" : "sine",
-          duration: idx === notes.length - 1 ? 0.42 : 0.16,
-          attack: 0.01,
-          gain: 0.22,
-          delay: idx * 0.075,
+          duration: idx === notes.length - 1 ? 0.45 : 0.15,
+          attack: 0.008,
+          gain: 0.23,
+          delay: idx * 0.07,
           targetBus: "sfx"
         });
       });
     },
 
-    // Quiz Answer Wrong (Soft descending minor interval)
+    // Gentle Buzzer for Wrong Answer
     wrong() {
       if (!settings.sfxEnabled) return;
       playTone({
-        freq: midiToFreq(58), // Bb3
+        freq: midiToFreq(58),
         freqEnd: midiToFreq(55),
         type: "sawtooth",
         duration: 0.16,
@@ -284,7 +366,7 @@
         targetBus: "sfx"
       });
       playTone({
-        freq: midiToFreq(52), // E3
+        freq: midiToFreq(52),
         freqEnd: midiToFreq(49),
         type: "triangle",
         duration: 0.28,
@@ -295,7 +377,6 @@
       });
     },
 
-    // Code Simulator Step Advance
     simStep(stepNum = 1) {
       if (!settings.sfxEnabled) return;
       const baseMidi = 64 + (stepNum % 8);
@@ -315,7 +396,6 @@
       });
     },
 
-    // Code Simulator Reset
     simReset() {
       if (!settings.sfxEnabled) return;
       playTone({
@@ -329,29 +409,6 @@
       });
     },
 
-    // Copy Code Snippet
-    copy() {
-      if (!settings.sfxEnabled) return;
-      playTone({
-        freq: 880,
-        type: "sine",
-        duration: 0.06,
-        attack: 0.004,
-        gain: 0.14,
-        targetBus: "sfx"
-      });
-      playTone({
-        freq: 1174.66,
-        type: "sine",
-        duration: 0.09,
-        attack: 0.004,
-        gain: 0.14,
-        delay: 0.06,
-        targetBus: "sfx"
-      });
-    },
-
-    // Login Success
     loginSuccess() {
       if (!settings.sfxEnabled) return;
       [60, 64, 67, 71, 72].forEach((m, i) => {
@@ -367,13 +424,11 @@
       });
     },
 
-    // Login Error
     loginError() {
       if (!settings.sfxEnabled) return;
       this.wrong();
     },
 
-    // Logout
     logout() {
       if (!settings.sfxEnabled) return;
       [72, 67, 64, 60].forEach((m, i) => {
@@ -389,7 +444,6 @@
       });
     },
 
-    // Modal Open / Close
     modalClose() {
       if (!settings.sfxEnabled) return;
       playTone({
@@ -405,34 +459,32 @@
   };
 
   /* ========================================================================
-     2. VARIED BACKGROUND SOUNDSCAPE GENERATOR (4 THEMES + AUTO)
+     2. VARIED BACKGROUND SOUNDSCAPE GENERATOR (5 THEMES + AUTO)
      ======================================================================== */
   function resolveActiveTheme() {
     if (settings.bgmTheme !== "auto") {
       return settings.bgmTheme;
     }
-    if (currentAppMode === "quiz") return "quiz_pulse";
-    if (currentAppMode === "rekap") return "zen";
-    if (currentAppMode === "admin") return "cyber";
+    if (currentAppMode === "quiz") return "arena_ccit";
+    if (currentAppMode === "rekap") return "zen_library";
+    if (currentAppMode === "admin") return "cloud_ambient";
     return "lofi";
   }
 
-  // Theme 1: Lo-Fi Focus Studio (Warm Electric Piano Chords + Gentle Hat/Pulse)
   const LOFI_CHORDS = [
     [60, 64, 67, 71], // Cmaj7
     [57, 60, 64, 69], // Am7
     [53, 57, 60, 64], // Fmaj7
-    [55, 59, 62, 65] // G7
+    [55, 59, 62, 65]  // G7
   ];
 
-  // Theme 2: Cyber Synth Algorithm (Futuristic Arpeggio in D Dorian)
-  const CYBER_ARP = [62, 65, 69, 72, 74, 72, 69, 65, 60, 64, 67, 72, 71, 67, 64, 60];
-
-  // Theme 3: Zen Garden Ambient (Pentatonic Meditative Chimes + Warm Pad)
+  const RETRO_ARP = [62, 65, 69, 72, 74, 72, 69, 65, 60, 64, 67, 72, 71, 67, 64, 60];
   const ZEN_PENTATONIC = [60, 62, 64, 67, 69, 72, 74, 76, 79];
-
-  // Theme 4: Upbeat Quiz Pulse (Light Marimba/Pluck Study Groove)
-  const QUIZ_GROOVE = [67, 72, 71, 74, 72, 67, 69, 71];
+  const ARENA_GROOVE = [67, 72, 71, 74, 72, 67, 69, 71];
+  const CLOUD_PAD = [
+    [58, 65, 70, 74], // Bbmaj7
+    [53, 60, 65, 69]  // Fmaj7
+  ];
 
   function triggerBgmStep() {
     if (!settings.bgmEnabled || !ctx || ctx.state !== "running") return;
@@ -441,7 +493,6 @@
     const step = stepCounter % 16;
 
     if (theme === "lofi") {
-      // Every 4 steps, play a warm Rhodes-like chord
       if (step % 4 === 0) {
         const chordIdx = Math.floor(step / 4) % LOFI_CHORDS.length;
         const chord = LOFI_CHORDS[chordIdx];
@@ -457,7 +508,6 @@
             targetBus: "bgm"
           });
         });
-        // Deep bass note
         playTone({
           freq: midiToFreq(chord[0] - 12),
           type: "triangle",
@@ -467,7 +517,6 @@
           targetBus: "bgm"
         });
       }
-      // Gentle lo-fi shaker tick on off-beats
       if (step % 2 === 1) {
         playSoftNoiseTick({
           duration: 0.03,
@@ -476,9 +525,8 @@
           targetBus: "bgm"
         });
       }
-    } else if (theme === "cyber") {
-      // Continuous synth arpeggio + sub pad on bar start
-      const note = CYBER_ARP[step % CYBER_ARP.length];
+    } else if (theme === "retro_eniac") {
+      const note = RETRO_ARP[step % RETRO_ARP.length];
       playTone({
         freq: midiToFreq(note),
         type: "triangle",
@@ -490,7 +538,7 @@
       });
       if (step % 8 === 0) {
         playTone({
-          freq: midiToFreq(50), // D3 Drone
+          freq: midiToFreq(50),
           type: "sine",
           duration: 2.8,
           attack: 0.25,
@@ -498,11 +546,10 @@
           targetBus: "bgm"
         });
       }
-    } else if (theme === "zen") {
-      // Harmonic drone every 8 steps + gentle random pentatonic chime
+    } else if (theme === "zen_library") {
       if (step % 8 === 0) {
         playTone({
-          freq: midiToFreq(48), // C3
+          freq: midiToFreq(48),
           type: "sine",
           duration: 3.4,
           attack: 0.4,
@@ -510,7 +557,7 @@
           targetBus: "bgm"
         });
         playTone({
-          freq: midiToFreq(55), // G3
+          freq: midiToFreq(55),
           type: "sine",
           duration: 3.4,
           attack: 0.5,
@@ -530,9 +577,8 @@
           targetBus: "bgm"
         });
       }
-    } else if (theme === "quiz_pulse") {
-      // Light rhythmic marimba pluck for active thinking
-      const note = QUIZ_GROOVE[step % QUIZ_GROOVE.length];
+    } else if (theme === "arena_ccit") {
+      const note = ARENA_GROOVE[step % ARENA_GROOVE.length];
       playTone({
         freq: midiToFreq(note),
         type: "sine",
@@ -543,7 +589,7 @@
       });
       if (step % 4 === 0) {
         playTone({
-          freq: midiToFreq(55), // G3 pulse
+          freq: midiToFreq(55),
           type: "triangle",
           duration: 0.45,
           attack: 0.01,
@@ -559,6 +605,31 @@
           targetBus: "bgm"
         });
       }
+    } else if (theme === "cloud_ambient") {
+      if (step % 8 === 0) {
+        const chord = CLOUD_PAD[Math.floor(step / 8) % CLOUD_PAD.length];
+        chord.forEach((m, i) => {
+          playTone({
+            freq: midiToFreq(m),
+            type: "sine",
+            duration: 3.1,
+            attack: 0.35,
+            gain: 0.05,
+            delay: i * 0.05,
+            targetBus: "bgm"
+          });
+        });
+      }
+      if (step % 4 === 2) {
+        playTone({
+          freq: midiToFreq(77 + (step % 5)),
+          type: "sine",
+          duration: 0.9,
+          attack: 0.03,
+          gain: 0.04,
+          targetBus: "bgm"
+        });
+      }
     }
 
     stepCounter++;
@@ -571,21 +642,76 @@
       if (settings.bgmEnabled) {
         triggerBgmStep();
       }
-    }, 420); // ~142 BPM eighth-note grid
-    syncAudioUI();
-  }
-
-  function stopBgmScheduler() {
-    if (bgmSchedulerTimer) {
-      clearInterval(bgmSchedulerTimer);
-      bgmSchedulerTimer = null;
-    }
-    isBgmPlaying = false;
+    }, 420);
     syncAudioUI();
   }
 
   /* ========================================================================
-     GLOBAL INTERACTION LISTENERS & UI CONTROLLER
+     3. INDONESIAN VOICE NARRATOR (AUDIO MEDIA PENJELASAN MATERI & KUIS)
+     ======================================================================== */
+  function speakText(text, onStateChange) {
+    if (!("speechSynthesis" in window)) {
+      alert("Browser Anda tidak mendukung fitur pembaca suara (Web Speech API).");
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    if (isNarrating) {
+      isNarrating = false;
+      if (onStateChange) onStateChange(false);
+      syncNarratorButtons();
+      return;
+    }
+
+    SFX.nav();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "id-ID";
+    utter.rate = 1.02;
+    utter.pitch = 1.02;
+
+    const voices = window.speechSynthesis.getVoices();
+    const idVoice = voices.find((v) => v.lang && v.lang.toLowerCase().includes("id"));
+    if (idVoice) utter.voice = idVoice;
+
+    isNarrating = true;
+    syncNarratorButtons();
+    if (onStateChange) onStateChange(true);
+
+    utter.onend = () => {
+      isNarrating = false;
+      syncNarratorButtons();
+      if (onStateChange) onStateChange(false);
+    };
+    utter.onerror = () => {
+      isNarrating = false;
+      syncNarratorButtons();
+      if (onStateChange) onStateChange(false);
+    };
+
+    window.speechSynthesis.speak(utter);
+  }
+
+  function stopNarration() {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    isNarrating = false;
+    syncNarratorButtons();
+  }
+
+  function syncNarratorButtons() {
+    const btnMateriNarrator = document.getElementById("btnNarrateMateri");
+    if (btnMateriNarrator) {
+      btnMateriNarrator.classList.toggle("speaking", isNarrating);
+      btnMateriNarrator.innerHTML = isNarrating
+        ? "⏹️ Hentikan Audio Narasi"
+        : "🎧 Dengarkan Audio Intisari Materi";
+    }
+  }
+
+  /* ========================================================================
+     4. GLOBAL INTERACTION LISTENERS & UI CONTROLLER
      ======================================================================== */
   function syncAudioUI() {
     const toggleBtn = document.getElementById("headerAudioBtn");
@@ -596,16 +722,18 @@
     const bgmVolSlider = document.getElementById("audioBgmVolume");
     const bgmVolLabel = document.getElementById("audioBgmVolLabel");
     const sfxToggleInput = document.getElementById("audioSfxToggle");
+    const sfxPackSelect = document.getElementById("audioSfxPackSelect");
     const hoverToggleInput = document.getElementById("audioHoverToggle");
     const sfxVolSlider = document.getElementById("audioSfxVolume");
     const sfxVolLabel = document.getElementById("audioSfxVolLabel");
     const activeThemeBadge = document.getElementById("audioActiveThemeBadge");
 
     const themeNames = {
-      lofi: "🎹 Lo-Fi Focus Studio",
-      cyber: "🌌 Cyber Synth Algorithm",
-      zen: "🍃 Zen Ambient Math",
-      quiz_pulse: "⚡ Upbeat Quiz Pulse"
+      lofi: "🎹 Lo-Fi Cyber Study",
+      arena_ccit: "⚡ Arena Cerdas Cermat",
+      retro_eniac: "🌌 Retro ENIAC & ARPANET",
+      zen_library: "🍃 Zen Digital Library",
+      cloud_ambient: "🚀 Cloud & AI Horizon"
     };
     const resolved = resolveActiveTheme();
 
@@ -617,7 +745,7 @@
     }
     if (loginMuteBtn) {
       const anyOn = settings.bgmEnabled || settings.sfxEnabled;
-      loginMuteBtn.textContent = anyOn ? "🔊 Suara & Musik: Aktif" : "🔇 Suara: Nonaktif";
+      loginMuteBtn.textContent = anyOn ? "🔊 Audio Media & Musik: Aktif" : "🔇 Audio: Nonaktif";
       loginMuteBtn.classList.toggle("muted", !anyOn);
     }
     if (bgmToggleInput) bgmToggleInput.checked = settings.bgmEnabled;
@@ -625,6 +753,7 @@
     if (bgmVolSlider) bgmVolSlider.value = Math.round(settings.bgmVolume * 100);
     if (bgmVolLabel) bgmVolLabel.textContent = `${Math.round(settings.bgmVolume * 100)}%`;
     if (sfxToggleInput) sfxToggleInput.checked = settings.sfxEnabled;
+    if (sfxPackSelect) sfxPackSelect.value = settings.sfxPack;
     if (hoverToggleInput) hoverToggleInput.checked = settings.hoverSfxEnabled;
     if (sfxVolSlider) sfxVolSlider.value = Math.round(settings.sfxVolume * 100);
     if (sfxVolLabel) sfxVolLabel.textContent = `${Math.round(settings.sfxVolume * 100)}%`;
@@ -636,7 +765,6 @@
   }
 
   function initAudioBindings() {
-    // Unlock Web Audio on first user interaction anywhere in the document
     const unlockOnce = () => {
       ensureAudioContext();
       if (settings.bgmEnabled && !isBgmPlaying) {
@@ -647,10 +775,9 @@
     window.addEventListener("pointerdown", unlockOnce, { once: true });
     window.addEventListener("keydown", unlockOnce, { once: true });
 
-    // Delegate hover & click SFX for buttons across the workspace
     document.addEventListener("mouseover", (e) => {
       const btn = e.target.closest(
-        "button, .option-btn, .subtopic-btn, .quiz-ch-tab, .quiz-sub-chip, .q-pill-btn, .mode-tab"
+        "button, .option-btn, .subtopic-btn, .quiz-ch-tab, .quiz-sub-chip, .q-pill-btn, .mode-tab, .ccit-flashcard, .quick-role-btn"
       );
       if (btn && !btn.disabled) {
         SFX.hover();
@@ -661,12 +788,10 @@
       const btn = e.target.closest("button");
       if (!btn || btn.disabled) return;
 
-      // Skip generic click if specialized handler already plays its own sound
       if (
         btn.id === "submitAnswerBtn" ||
         btn.id === "simNextStepBtn" ||
         btn.id === "simResetBtn" ||
-        btn.classList.contains("copy-code-btn") ||
         btn.classList.contains("option-btn")
       ) {
         return;
@@ -677,7 +802,9 @@
         btn.classList.contains("mode-tab") ||
         btn.classList.contains("quiz-ch-tab") ||
         btn.classList.contains("quiz-sub-chip") ||
-        btn.classList.contains("nav-step-btn")
+        btn.classList.contains("nav-step-btn") ||
+        btn.classList.contains("sec-jump-pill") ||
+        btn.classList.contains("nested-sec-btn")
       ) {
         SFX.nav();
       } else {
@@ -685,7 +812,6 @@
       }
     });
 
-    // Wire up Audio Popover Controls
     const headerAudioBtn = document.getElementById("headerAudioBtn");
     const audioPopover = document.getElementById("audioStudioPopover");
     const closeAudioPopoverBtn = document.getElementById("closeAudioPopoverBtn");
@@ -736,6 +862,7 @@
     const bgmThemeSelect = document.getElementById("audioBgmThemeSelect");
     const bgmVolSlider = document.getElementById("audioBgmVolume");
     const sfxToggleInput = document.getElementById("audioSfxToggle");
+    const sfxPackSelect = document.getElementById("audioSfxPackSelect");
     const hoverToggleInput = document.getElementById("audioHoverToggle");
     const sfxVolSlider = document.getElementById("audioSfxVolume");
 
@@ -787,6 +914,16 @@
       });
     }
 
+    if (sfxPackSelect) {
+      sfxPackSelect.addEventListener("change", (e) => {
+        ensureAudioContext();
+        settings.sfxPack = e.target.value;
+        saveSettings(settings);
+        SFX.click();
+        syncAudioUI();
+      });
+    }
+
     if (hoverToggleInput) {
       hoverToggleInput.addEventListener("change", (e) => {
         settings.hoverSfxEnabled = e.target.checked;
@@ -805,7 +942,6 @@
       });
     }
 
-    // Sound test buttons inside Audio Studio Popover
     document.querySelectorAll("[data-test-sfx]").forEach((btn) => {
       btn.addEventListener("click", () => {
         ensureAudioContext();
@@ -820,21 +956,23 @@
     syncAudioUI();
   }
 
-  // Expose public API to window.SoundStudio for app.js integration
   window.SoundStudio = {
     playClick: () => SFX.click(),
     playHover: () => SFX.hover(),
     playNav: () => SFX.nav(),
+    playAccordion: (open) => SFX.accordion(open),
+    playFlipCard: () => SFX.flipCard(),
     playSelectOption: (key) => SFX.selectOption(key),
     playCorrect: () => SFX.correct(),
     playWrong: () => SFX.wrong(),
     playSimStep: (step) => SFX.simStep(step),
     playSimReset: () => SFX.simReset(),
-    playCopy: () => SFX.copy(),
     playLoginSuccess: () => SFX.loginSuccess(),
     playLoginError: () => SFX.loginError(),
     playLogout: () => SFX.logout(),
     playModalClose: () => SFX.modalClose(),
+    speakText: (text, cb) => speakText(text, cb),
+    stopNarration: () => stopNarration(),
     setAppMode(mode) {
       currentAppMode = mode;
       syncAudioUI();

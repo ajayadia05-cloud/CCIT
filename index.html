@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCIT Arena Studio — Media Pembelajaran Interaktif Cerdas Cermat IT (Desktop 16:9)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Desktop 16:9 Viewport Wrapper -->
+  <div class="app-viewport" id="appViewport">
+
+    <!-- ====================================================================
+         0. HALAMAN LOGIN UTAMA (AKSES USER ADMIN & USER MURID)
+         ==================================================================== -->
+    <div class="login-gate" id="loginGate">
+      <div class="login-split-card">
+        <!-- Left Promo / Info Banner -->
+        <div class="login-hero-side">
+          <div class="login-brand-pill">
+            <span class="sim-live-dot"></span>
+            <span>MEDIA PEMBELAJARAN INTERAKTIF DESKTOP 16:9</span>
+          </div>
+          <h1>CCIT <span class="brand-accent">Arena Studio</span></h1>
+          <p class="login-hero-desc">
+            Aplikasi Web Media Pembelajaran Interaktif <strong>Cerdas Cermat Teknologi Informasi (CCIT)</strong> dilengkapi Jembatan Hafalan, Flashcard, Audio Narasi Materi, Musik Latar Variatif, serta 80 Soal Latihan &amp; Pembahasan.
+          </p>
+
+          <div class="login-feature-list">
+            <div class="login-feat-item">
+              <span class="feat-icon">📚</span>
+              <div>
+                <strong>4 Sub-Materi Lengkap (A, B, C, D) &amp; Jembatan Keledai</strong>
+                <span>Sejarah TI (ENIAC, Babbage, Turing, Von Neumann), Hardware/Software, Jaringan &amp; Kriptografi/Firewall, serta Sejarah ARPANET–Internet.</span>
+              </div>
+            </div>
+            <div class="login-feat-item">
+              <span class="feat-icon">🎯</span>
+              <div>
+                <strong>20 Soal Latihan + Pembahasan di Setiap Sub-Materi (80 Soal)</strong>
+                <span>Dilengkapi ringkasan cepat sebelum masuk soal dan pembahasan otomatis setelah menjawab.</span>
+              </div>
+            </div>
+            <div class="login-feat-item">
+              <span class="feat-icon">🛡️</span>
+              <div>
+                <strong>Akses Login User Admin &amp; User Murid</strong>
+                <span>Admin dapat menambah, mengedit, membekukan akun murid, serta memantau skor secara <em>realtime</em>.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Login Form -->
+        <div class="login-form-side">
+          <div class="login-form-header">
+            <h2>Masuk ke Aplikasi CCIT</h2>
+            <p>Masuk sebagai <strong>User Admin</strong> (mengelola murid &amp; monitoring) atau <strong>User Murid</strong> (belajar materi &amp; latihan 80 soal).</p>
+          </div>
+
+          <form id="loginForm" class="login-form" autocomplete="off">
+            <div class="form-group">
+              <label for="loginUsername">Username / ID Pengguna</label>
+              <input type="text" id="loginUsername" placeholder="Masukkan username Anda..." required />
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword">Password Akses</label>
+              <input type="password" id="loginPassword" placeholder="Masukkan password..." required />
+            </div>
+
+            <div class="login-error-msg hidden" id="loginErrorMsg">
+              Username atau password tidak sesuai!
+            </div>
+
+            <button type="submit" class="btn-login-submit">
+              <span>Masuk Sekarang</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </form>
+
+          <div class="login-footer-note">
+            <span>🔒 Hubungi Administrator jika Anda belum memiliki akun akses murid.</span>
+            <button type="button" class="login-audio-quick-btn" id="loginAudioQuickBtn" title="Aktifkan/Matikan Musik Latar & Efek Suara">
+              🔊 Audio Media &amp; Musik: Aktif
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TOP HEADER BAR
+         ==================================================================== -->
+    <header class="top-header">
+      <div class="brand-section">
+        <div class="brand-logo" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CCIT <span class="brand-accent">Arena Studio</span></span>
+          <span class="brand-subtitle">
+            <span class="realtime-dot"></span> Cerdas Cermat IT Interaktif
+          </span>
+        </div>
+      </div>
+
+      <!-- Breadcrumb Navigation -->
+      <div class="header-breadcrumb" id="headerBreadcrumb">
+        <span class="crumb-root">Cerdas Cermat IT</span>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-chapter" id="crumbChapter">Materi Cerdas Cermat IT</span>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-topic" id="crumbTopic">A. Sejarah Teknologi Informasi</span>
+      </div>
+
+      <!-- Right Controls: Progress, Rekap, Admin, Audio Studio, 16:9, Theme, User -->
+      <div class="header-controls">
+        <div class="progress-pill" title="Progres Baca Materi & 80 Soal Latihan">
+          <div class="progress-info">
+            <span class="progress-label">Progres Saya</span>
+            <span class="progress-Value" id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <button class="icon-btn" id="headerRekapBtn" title="Lihat Rekapan Nilai & Jawaban 80 Soal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 20V10M12 20V4M6 20v-6"></path>
+          </svg>
+          <span class="btn-label">Rekapan</span>
+          <span class="rekap-mini-badge" id="headerRekapBadge">0B / 0S</span>
+        </button>
+
+        <button class="icon-btn admin-only-btn hidden" id="headerAdminBtn" title="Kelola Akses User Murid & Monitoring Realtime">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span class="btn-label">Panel Admin</span>
+        </button>
+
+        <button class="icon-btn" id="ratioToggleBtn" title="Toggle Bingkai Rasio Desktop 16:9 / Layar Penuh">
+          <span class="btn-label">16:9</span>
+        </button>
+
+        <!-- Audio Media & Soundscape Studio Popover -->
+        <div class="audio-studio-wrap">
+          <button class="icon-btn active" id="headerAudioBtn" title="Pengaturan Audio Media, Musik Latar & Variasi Suara Tombol">
+            <span class="audio-eq-bars playing" id="headerAudioEq">
+              <i></i><i></i><i></i>
+            </span>
+            <span class="btn-label">Audio Studio</span>
+          </button>
+
+          <div class="audio-studio-popover hidden" id="audioStudioPopover" role="dialog" aria-label="Pengaturan Audio Media">
+            <div class="audio-popover-head">
+              <div>
+                <strong>🎵 Audio Media &amp; Soundscape Studio</strong>
+                <span class="audio-active-badge" id="audioActiveThemeBadge">Sedang Diputar: 🎹 Lo-Fi Cyber Study</span>
+              </div>
+              <button type="button" class="audio-popover-close" id="closeAudioPopoverBtn">✕</button>
+            </div>
+
+            <div class="audio-section">
+              <div class="audio-row-between">
+                <label for="audioBgmToggle"><strong>Musik Latar Belakang (BGM)</strong></label>
+                <input type="checkbox" id="audioBgmToggle" checked />
+              </div>
+
+              <div class="audio-field">
+                <label for="audioBgmThemeSelect">5 Variasi Tema Audio Media Latar:</label>
+                <select id="audioBgmThemeSelect" class="rekap-select-input" style="width:100%">
+                  <option value="auto">🔄 Otomatis (Adaptif Materi / Kuis CCIT)</option>
+                  <option value="lofi">🎹 Lo-Fi Cyber Study (Warm Chords)</option>
+                  <option value="arena_ccit">⚡ Arena Cerdas Cermat (Upbeat Rhythm)</option>
+                  <option value="retro_eniac">🌌 Retro ENIAC &amp; ARPANET (Synthwave)</option>
+                  <option value="zen_library">🍃 Zen Digital Library (Pentatonic Bell)</option>
+                  <option value="cloud_ambient">🚀 Cloud &amp; AI Horizon (Ambient Pad)</option>
+                </select>
+              </div>
+
+              <div class="audio-field">
+                <div class="audio-row-between">
+                  <label for="audioBgmVolume">Volume Musik Latar</label>
+                  <span id="audioBgmVolLabel">35%</span>
+                </div>
+                <input type="range" id="audioBgmVolume" min="0" max="100" value="35" class="audio-slider" />
+              </div>
+            </div>
+
+            <div class="audio-divider"></div>
+
+            <div class="audio-section">
+              <div class="audio-row-between">
+                <label for="audioSfxToggle"><strong>Efek Suara Tombol Interaktif (SFX)</strong></label>
+                <input type="checkbox" id="audioSfxToggle" checked />
+              </div>
+
+              <div class="audio-field">
+                <label for="audioSfxPackSelect">Karakter Audio Tombol:</label>
+                <select id="audioSfxPackSelect" class="rekap-select-input" style="width:100%">
+                  <option value="arcade">🎮 Arcade Cerdas Cermat (Chime &amp; Bell)</option>
+                  <option value="scifi">🔮 Sci-Fi Cyber Hologram (Tech UI)</option>
+                  <option value="mech">🫧 Mechanical Keycap Pop (Tactile)</option>
+                </select>
+              </div>
+
+              <div class="audio-row-between" style="margin-top:4px;">
+                <label for="audioHoverToggle">Suara Sentuh / Hover Tombol</label>
+                <input type="checkbox" id="audioHoverToggle" checked />
+              </div>
+
+              <div class="audio-field">
+                <div class="audio-row-between">
+                  <label for="audioSfxVolume">Volume Efek Tombol &amp; Kuis</label>
+                  <span id="audioSfxVolLabel">70%</span>
+                </div>
+                <input type="range" id="audioSfxVolume" min="0" max="100" value="70" class="audio-slider" />
+              </div>
+
+              <div class="audio-test-row">
+                <span class="audio-test-label">Uji Efek Audio Tombol:</span>
+                <div class="audio-test-btns">
+                  <button type="button" class="audio-test-btn" data-test-sfx="click">🖱️ Tombol</button>
+                  <button type="button" class="audio-test-btn" data-test-sfx="correct">🔔 Benar</button>
+                  <button type="button" class="audio-test-btn" data-test-sfx="wrong">🚨 Salah</button>
+                  <button type="button" class="audio-test-btn" data-test-sfx="sim">⚡ Simulasi</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="icon-btn" id="themeToggleBtn" title="Ganti Tema Gelap / Terang">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2"></path>
+          </svg>
+        </button>
+
+        <!-- Active User Pill & Logout -->
+        <div class="user-session-pill">
+          <div class="user-avatar" id="headerUserAvatar">U</div>
+          <div class="user-meta">
+            <span class="user-name" id="headerUserName">Guest</span>
+            <span class="user-role-tag" id="headerUserRole">MURID</span>
+          </div>
+          <button class="logout-btn" id="logoutBtn" title="Keluar / Ganti Akun">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         MAIN 2-COLUMN WORKSPACE (1. SIDEBAR NAVIGASI KIRI + 2. AREA MATERI KANAN)
+         ==================================================================== -->
+    <div class="workspace-grid">
+
+      <!-- 1. SIDEBAR KIRI: Menu Akordion Sub-Bab CCIT (A, B, C, D) -->
+      <aside class="sidebar-nav" aria-label="Sidebar Navigasi Materi Cerdas Cermat IT">
+        <!-- Search Filter inside Sidebar -->
+        <div class="sidebar-search-box">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="sidebarSearchInput" placeholder="Cari sub-bab ENIAC, Babbage, Firewall, ARPANET..." autocomplete="off" />
+        </div>
+
+        <!-- Mode Switcher Tabs inside Sidebar -->
+        <div class="sidebar-mode-tabs" id="sidebarModeTabs">
+          <button class="mode-tab active" id="tabMenuMateri" data-mode="materi">
+            <span>📚 Materi</span>
+          </button>
+          <button class="mode-tab" id="tabMenuKuis" data-mode="quiz">
+            <span>📝 Soal (80)</span>
+          </button>
+          <button class="mode-tab" id="tabMenuRekap" data-mode="rekap">
+            <span>📊 Rekapan</span>
+          </button>
+          <button class="mode-tab hidden" id="tabMenuAdmin" data-mode="admin">
+            <span>⚙️ Admin</span>
+          </button>
+        </div>
+
+        <!-- Scrollable Accordion Navigation Tree -->
+        <div class="sidebar-scroll" id="sidebarScrollContainer">
+          <!-- Dynamically populated by app.js: Accordion Sub-Materi A, B, C, D -->
+          <div id="sidebarTreeMateri"></div>
+
+          <div class="sidebar-divider"></div>
+
+          <!-- Dedicated 20-Question per Sub-Materi Menu in Sidebar -->
+          <div class="sidebar-quiz-section" id="sidebarTreeQuiz">
+            <div class="sidebar-section-label">
+              <span>LATIHAN SOAL (4 × 20 SOAL)</span>
+              <span class="badge-pill" id="sidebarQuizStatus">0/80 Dijawab</span>
+            </div>
+            <div id="sidebarQuizList" class="quiz-nav-list"></div>
+          </div>
+        </div>
+
+        <!-- Sidebar Footer Quick Help -->
+        <div class="sidebar-footer">
+          <div class="shortcut-hint">
+            Klik Sub-Bab <strong>A, B, C, D</strong> untuk membuka akordion sub-materi &amp; 20 soal latihan
+          </div>
+        </div>
+      </aside>
+
+      <!-- 2. AREA UTAMA KANAN: Materi / Latihan 20 Soal / Rekapan / Panel Admin -->
+      <main class="main-stage" id="mainStage">
+
+        <!-- VIEW A: AREA MATERI PEMBELAJARAN DETAIL -->
+        <section class="content-view active" id="materiView">
+          <div class="content-scroll" id="materiScrollContainer">
+
+            <!-- Sub-Materi Hero Banner -->
+            <div class="topic-hero-card" id="topicHeroCard">
+              <div class="topic-meta-row">
+                <span class="chapter-badge" id="topicChapterBadge">MATERI CERDAS CERMAT IT • SUB-BAB A</span>
+                <span class="read-status-badge" id="topicReadBadge">✓ Materi &amp; Jembatan Hafalan Siap</span>
+              </div>
+              <h1 class="topic-title" id="topicTitle">A. Sejarah Teknologi Informasi</h1>
+              <p class="topic-chapter-desc" id="topicChapterDesc">
+                Perkembangan teknologi dari era komputer pertama hingga teknologi modern serta tokoh-tokoh penting dalam sejarah TI.
+              </p>
+            </div>
+
+            <!-- Sticky Section Jump Bar + Voice Narrator Audio Media Button -->
+            <div class="materi-Sticky-toolbar">
+              <div class="section-jump-pills" id="sectionJumpPills"></div>
+              <div class="narrator-controls">
+                <button type="button" class="btn-narrator" id="btnNarrateMateri" title="Dengarkan Penjelasan Audio Bahasa Indonesia untuk Sub-Materi Ini">
+                  🎧 Dengarkan Audio Intisari Materi
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Topic Content Body (Jembatan Keledai, Flashcards, Detail Materi) -->
+            <article class="topic-body" id="topicBodyContent"></article>
+
+            <!-- Interactive Step-by-Step Visual Simulator -->
+            <div class="simulator-container" id="simulatorContainer">
+              <div class="simulator-header">
+                <div class="sim-title-group">
+                  <span class="sim-live-dot"></span>
+                  <h3 id="simTitle">Simulasi Interaktif</h3>
+                </div>
+                <div class="sim-controls">
+                  <button class="sim-btn" id="simResetBtn" title="Ulangi dari awal">↺ Reset</button>
+                  <button class="sim-btn primary" id="simNextStepBtn">Mulai Simulasi →</button>
+                </div>
+              </div>
+              <div class="simulator-body">
+                <div class="sim-code-pane" id="simCodePane"></div>
+                <div class="sim-state-pane">
+                  <div class="sim-vars-box">
+                    <span class="sim-pane-label">STATUS PARAMETER &amp; KONSEP INTI</span>
+                    <div class="sim-vars-grid" id="simVarsGrid"></div>
+                  </div>
+                  <div class="sim-explanation-box">
+                    <span class="sim-pane-label">PENJELASAN TAHAP DEMI TAHAP</span>
+                    <p id="simStepExplanation">Klik "Mulai Simulasi" untuk menelusuri alur konsep secara visual.</p>
+                  </div>
+                  <div class="sim-output-box">
+                    <span class="sim-pane-label">LOG HASIL / OUTPUT SISTEM</span>
+                    <pre id="simOutputConsole">Menunggu simulasi dimulai...</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-Materi 20 Practice Questions Call-To-Action Banner -->
+            <div class="subtopic-quiz-cta-card" id="subtopicQuizCtaCard">
+              <div class="subtopic-quiz-cta-info">
+                <span class="chapter-badge" id="subtopicQuizCtaBadge">EVALUASI SUB-MATERI • 20 SOAL LATIHAN &amp; PEMBAHASAN</span>
+                <h3 id="subtopicQuizCtaTitle">Siap Uji Pemahaman A. Sejarah Teknologi Informasi?</h3>
+                <p id="subtopicQuizCtaDesc">Kerjakan 20 soal latihan pilihan ganda khusus Sub-Materi ini lengkap dengan pembahasan jawaban otomatis setelah menjawab soal.</p>
+              </div>
+              <div class="subtopic-quiz-cta-right">
+                <span class="subtopic-quiz-score-pill" id="subtopicQuizCtaScore">Progres: 0/20 Dijawab</span>
+                <button class="nav-quiz-bridge-btn" id="bridgeToQuizBtn">
+                  <span id="bridgeToQuizText">Mulai 20 Soal Latihan Sub-Materi Ini</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Bottom Topic Navigation Bar -->
+            <div class="topic-footer-nav">
+              <button class="nav-step-btn prev" id="prevTopicBtn">
+                <span class="nav-dir">← Sub-Materi Sebelumnya</span>
+                <strong class="nav-target-title" id="prevTopicTitle">-</strong>
+              </button>
+
+              <button class="nav-quiz-bridge-btn" id="footerQuizBridgeBtn">
+                <span id="footerQuizBridgeText">📝 Kerjakan 20 Soal Sub-Materi Ini</span>
+              </button>
+
+              <button class="nav-step-btn next" id="nextTopicBtn">
+                <span class="nav-dir">Sub-Materi Selanjutnya →</span>
+                <strong class="nav-target-title" id="nextTopicTitle">B. Jenis dan Fungsi Teknologi Informasi</strong>
+              </button>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- VIEW B: AREA LATIHAN 20 SOAL PER SUB-MATERI + RINGKASAN PRA-SOAL + PEMBAHASAN -->
+        <section class="content-view" id="quizView">
+          <div class="content-scroll" id="quizScrollContainer">
+
+            <!-- Quiz Top Bar -->
+            <div class="quiz-dashboard-bar">
+              <div class="quiz-header-info">
+                <span class="chapter-badge accent" id="quizActiveChapterBadge">LATIHAN 20 SOAL &amp; PEMBAHASAN • TOTAL 80 SOAL CCIT</span>
+                <h1 class="quiz-main-title" id="quizMainTitle">Latihan 20 Soal &amp; Pembahasan Jawaban</h1>
+                <p class="quiz-subtitle" id="quizSubtitleText">Pilih Sub-Materi (A, B, C, atau D) untuk mengerjakan 20 soal latihan beserta pembahasan lengkap.</p>
+              </div>
+
+              <div class="quiz-stats-card">
+                <div class="stat-item">
+                  <span class="stat-label">Sub-Materi Ini</span>
+                  <strong class="stat-num" id="quizStatChapter">0 / 20</strong>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <span class="stat-label">Total Dijawab</span>
+                  <strong class="stat-num" id="quizStatAnswered">0 / 80</strong>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <span class="stat-label">Benar</span>
+                  <strong class="stat-num correct" id="quizStatCorrect">0</strong>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                  <span class="stat-label">Salah</span>
+                  <strong class="stat-num wrong" id="quizStatWrong">0</strong>
+                </div>
+                <button class="btn-back-materi-quiz" id="backToSubtopicMateriBtn" title="Baca kembali penjelasan materi lengkap Sub-Materi ini">📖 Baca Materi Lengkap</button>
+                <button class="reset-all-quiz-btn" id="resetAllQuizBtn" title="Reset 20 jawaban pada Sub-Materi ini">↺ Reset 20 Soal</button>
+              </div>
+            </div>
+
+            <!-- Sub-Materi Selector Tabs (A: 20 Soal, B: 20 Soal, C: 20 Soal, D: 20 Soal) -->
+            <div class="quiz-subtopic-bar" id="quizSubtopicBar"></div>
+
+            <!-- PRE-QUIZ MEMORY BOOSTER BANNER ("Sebelum masuk soal buatkan materi pembahasan yang mudah dipahami dan diingat") -->
+            <div class="prequiz-review-banner" id="preQuizReviewBanner">
+              <button type="button" class="prequiz-review-header" id="preQuizToggleBtn">
+                <div class="prequiz-review-title">
+                  <span id="preQuizTitleText">🧠 Ringkasan Materi &amp; Jembatan Hafalan Cepat Sebelum Menjawab 20 Soal</span>
+                </div>
+                <span style="font-size:12px;font-weight:700;color:var(--accent-primary);" id="preQuizToggleLabel">Sembunyikan Ringkasan ▲</span>
+              </button>
+              <div class="prequiz-review-body" id="preQuizReviewBody">
+                <div class="prequiz-points-grid" id="preQuizPointsGrid"></div>
+              </div>
+            </div>
+
+            <!-- Question Number Pills (Soal 1 s/d Soal 20) -->
+            <div class="quiz-pills-bar" id="quizPillsBar"></div>
+
+            <!-- Active Quiz Workspace Grid (Left: Question Card, Right: Pembahasan Jawaban) -->
+            <div class="quiz-workspace-layout">
+
+              <!-- Left Column: Question & Multiple Choice Options -->
+              <div class="question-card" id="activeQuestionCard">
+                <div class="question-card-header">
+                  <div class="q-badge-group">
+                    <span class="q-number-badge" id="qNumberBadge">SOAL 1 DARI 20</span>
+                    <span class="q-category-badge" id="qCategoryBadge">A. Sejarah Teknologi Informasi</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <button type="button" class="btn-narrator" id="btnNarrateQuestion" style="padding:4px 10px;font-size:11.5px;" title="Bacakan Soal dan Opsi Jawaban dengan Suara">
+                      🔊 Bacakan Soal
+                    </button>
+                    <span class="q-status-chip" id="qStatusChip">Belum Dijawab</span>
+                  </div>
+                </div>
+
+                <!-- Question Narrative / Text -->
+                <div class="question-prompt" id="qPromptContent"></div>
+
+                <!-- Multiple Choice Options List (A, B, C, D) -->
+                <div class="options-list" id="qOptionsList" role="radiogroup" aria-label="Pilihan Jawaban"></div>
+
+                <!-- Action Buttons: Submit, Retry, Prev/Next Question -->
+                <div class="question-actions-bar">
+                  <div class="action-left">
+                    <button class="btn-submit-answer" id="submitAnswerBtn" disabled>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <span>Submit Jawaban &amp; Lihat Pembahasan</span>
+                    </button>
+                    <button class="btn-retry-question hidden" id="retryQuestionBtn">
+                      ↺ Jawab Ulang
+                    </button>
+                  </div>
+
+                  <div class="action-right">
+                    <button class="btn-prev-q" id="prevQuestionBtn">← Soal Sebelumnya</button>
+                    <button class="btn-next-q" id="nextQuestionBtn">Soal Berikutnya →</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: Pembahasan Jawaban Otomatis Setelah Menjawab Soal -->
+              <div class="feedback-panel" id="feedbackPanel">
+                <div class="feedback-empty-state" id="feedbackEmptyState">
+                  <div class="empty-illustration">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                      <path d="M9 12l2 2 4-4"></path>
+                    </svg>
+                  </div>
+                  <h3>Pembahasan Jawaban Siap Ditampilkan</h3>
+                  <p>Pilih salah satu opsi jawaban (A, B, C, atau D) di sebelah kiri lalu klik <strong>Submit Jawaban &amp; Lihat Pembahasan</strong>. Penjelasan detail dan kunci jawaban akan langsung muncul di sini.</p>
+                </div>
+
+                <div class="feedback-result-content hidden" id="feedbackResultContent">
+                  <div class="feedback-banner" id="feedbackBanner">
+                    <div class="feedback-icon-circle" id="feedbackIconCircle">✓</div>
+                    <div class="feedback-banner-text">
+                      <span class="feedback-verdict" id="feedbackVerdict">JAWABAN BENAR!</span>
+                      <span class="feedback-chosen-info" id="feedbackChosenInfo">Anda memilih Opsi A</span>
+                    </div>
+                    <button class="btn-open-popup" id="openPopupModalBtn" title="Perbesar Pembahasan dalam Layar Pop-up">
+                      ⤢ Pop-up Detail
+                    </button>
+                  </div>
+
+                  <div class="feedback-explanation-body" id="feedbackExplanationBody"></div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- VIEW C: REKAPAN SKOR & DETAIL 80 SOAL -->
+        <section class="content-view" id="rekapView">
+          <div class="content-scroll" id="rekapScrollContainer">
+            <div class="quiz-dashboard-bar">
+              <div class="quiz-header-info">
+                <span class="chapter-badge accent" id="rekapOwnerBadge">LAPORAN EVALUASI &amp; REKAPAN REALTIME</span>
+                <h1 class="quiz-main-title" id="rekapMainTitle">Rekapan Jawaban Benar / Salah &amp; Progres Materi</h1>
+                <p class="quiz-subtitle" id="rekapSubtitle">
+                  Menampilkan rincian hasil pengerjaan 80 soal latihan Cerdas Cermat IT (4 Sub-Materi × 20 Soal) beserta kunci jawaban dan status kebenarannya.
+                </p>
+              </div>
+              <div class="rekap-user-selector-wrap hidden" id="rekapAdminUserSelectorWrap">
+                <label for="rekapSelectUser">Pilih Akun Murid untuk Dilihat:</label>
+                <select id="rekapSelectUser" class="rekap-select-input"></select>
+              </div>
+            </div>
+
+            <!-- Summary KPI Cards -->
+            <div class="rekap-kpi-grid" id="rekapKpiGrid"></div>
+
+            <!-- Per-Sub-Materi Breakdown Cards (A, B, C, D) -->
+            <div class="rekap-chapter-grid" id="rekapChapterGrid"></div>
+
+            <!-- Filter Bar & Detailed 80-Question Table -->
+            <div class="info-card" style="margin-top: 16px;">
+              <div class="rekap-table-header">
+                <h3>📋 Tabel Rincian Jawaban Benar / Salah per Sub-Materi (80 Soal)</h3>
+                <div class="rekap-filters">
+                  <select id="rekapFilterSubtopic" class="rekap-select-input">
+                    <option value="all">Semua Sub-Materi (A, B, C, D - 80 Soal)</option>
+                    <option value="sub-a">Sub-Materi A: Sejarah Teknologi Informasi (20 Soal)</option>
+                    <option value="sub-b">Sub-Materi B: Jenis dan Fungsi TI (20 Soal)</option>
+                    <option value="sub-c">Sub-Materi C: Mekanisme dan Proses Teknologi (20 Soal)</option>
+                    <option value="sub-d">Sub-Materi D: Sejarah Jaringan Komputer (20 Soal)</option>
+                  </select>
+                  <select id="rekapFilterStatus" class="rekap-select-input">
+                    <option value="all">Semua Status Jawaban</option>
+                    <option value="correct">✓ Hanya yang Benar</option>
+                    <option value="wrong">✕ Hanya yang Salah</option>
+                    <option value="unanswered">• Belum Dijawab</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="data-table-wrap">
+                <table class="logic-table rekap-detail-table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Sub-Materi</th>
+                      <th>Topik Soal</th>
+                      <th>Jawaban User</th>
+                      <th>Kunci Jawaban</th>
+                      <th>Status</th>
+                      <th>Waktu Jawab</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rekapTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW D: PANEL ADMIN (KELOLA & TAMBAH USER MURID) -->
+        <section class="content-view" id="adminView">
+          <div class="content-scroll" id="adminScrollContainer">
+            <div class="quiz-dashboard-bar">
+              <div class="quiz-header-info">
+                <span class="chapter-badge accent">ADMINISTRATOR CONTROL PANEL • MANAJEMEN USER MURID</span>
+                <h1 class="quiz-main-title">Pengaturan &amp; Penambahan Akun User Murid</h1>
+                <p class="quiz-subtitle">
+                  User Admin dapat menambahkan akun murid baru, mengedit nama/kelas/password murid, mengaktifkan atau membekukan akses login, serta memantau progres 80 soal setiap murid.
+                </p>
+              </div>
+              <div class="realtime-badge-box">
+                <span class="sim-live-dot"></span>
+                <div>
+                  <strong>Live Monitoring Aktif</strong>
+                  <small id="adminLastSyncText">Terhubung ke penyimpanan lokal &amp; lintas tab</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-layout-grid">
+              <!-- Left Card: Form Tambah / Edit User Murid -->
+              <div class="info-card">
+                <h3 id="adminFormTitle">➕ Tambah Akses User Murid Baru</h3>
+                <p>Buat atau atur akun murid agar murid dapat login dan mengerjakan materi serta 80 soal latihan CCIT.</p>
+                <form id="addStudentForm" class="admin-form" autocomplete="off">
+                  <div class="form-group">
+                    <label for="stuName">Nama Lengkap Murid</label>
+                    <input type="text" id="stuName" placeholder="Contoh: Dewi Sartika" required />
+                  </div>
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label for="stuUsername">Username Login</label>
+                      <input type="text" id="stuUsername" placeholder="Contoh: dewi" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="stuPassword">Password Akses</label>
+                      <input type="text" id="stuPassword" placeholder="Contoh: 12345" required />
+                    </div>
+                  </div>
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label for="stuKelas">Kelas / Tim CCIT</label>
+                      <input type="text" id="stuKelas" placeholder="Contoh: Tim CCIT-A" value="Tim CCIT-A" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="stuActive">Status Akses Login</label>
+                      <select id="stuActive" class="rekap-select-input" style="width:100%;height:38px;">
+                        <option value="true">Aktif (Bisa Login)</option>
+                        <option value="false">Nonaktif (Dibekukan)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="admin-form-msg hidden" id="adminFormMsg"></div>
+                  <div style="display:flex;gap:8px;margin-top:6px;">
+                    <button type="submit" class="btn-submit-answer" id="adminSubmitBtn" style="flex:1;justify-content:center;">
+                      + Tambahkan Akun Murid
+                    </button>
+                    <button type="button" class="btn-retry-question hidden" id="adminCancelEditBtn">
+                      Batal Edit
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Right Card: Tabel Daftar Murid & Progres Pengerjaan Realtime -->
+              <div class="info-card">
+                <div class="rekap-table-header">
+                  <h3>👥 Daftar User Murid &amp; Pengaturan Akses</h3>
+                  <span class="badge-pill" id="adminStudentCountBadge">0 Akun Murid</span>
+                </div>
+                <div class="data-table-wrap">
+                  <table class="logic-table admin-students-table">
+                    <thead>
+                      <tr>
+                        <th>Nama &amp; Username</th>
+                        <th>Kelas / Tim</th>
+                        <th>Password</th>
+                        <th>Status Akses</th>
+                        <th>Materi Dibaca</th>
+                        <th>Soal Dijawab</th>
+                        <th>Rekap (Benar / Salah)</th>
+                        <th>Nilai Skor</th>
+                        <th>Aktivitas Terakhir</th>
+                        <th>Pengaturan &amp; Aksi Admin</th>
+                      </tr>
+                    </thead>
+                    <tbody id="adminStudentsTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- Pop-up Modal for Detailed Answer Explanation -->
+    <div class="modal-backdrop hidden" id="feedbackModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalVerdictTitle">
+      <div class="feedback-modal-card" id="feedbackModalCard">
+        <div class="modal-header" id="modalHeaderBanner">
+          <div class="modal-verdict-group">
+            <div class="modal-verdict-icon" id="modalVerdictIcon">✓</div>
+            <div>
+              <h2 class="modal-verdict-title" id="modalVerdictTitle">Jawaban Anda Tepat!</h2>
+              <p class="modal-verdict-sub" id="modalVerdictSub">Soal 1 • Sejarah Teknologi Informasi</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" id="closeModalBtn" aria-label="Tutup Pop-up Pembahasan">✕</button>
+        </div>
+
+        <div class="modal-body" id="modalExplanationBody"></div>
+
+        <div class="modal-footer">
+          <button class="btn-modal-secondary" id="modalStayBtn">Tutup Pop-up</button>
+          <button class="btn-modal-primary" id="modalNextQuestionBtn">Lanjut ke Soal Berikutnya →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script src="quiz_bank_ab.js"></script>
+  <script src="quiz_bank_cd.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
